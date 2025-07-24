@@ -3,22 +3,34 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func main() {
 	args := os.Args
-	if len(args) < 2 {
-		fmt.Println("no website provided")
+	if len(args) < 4 {
+		fmt.Println("too few arguments provided")
+		fmt.Println("usage: ./crawler <\"URL\"> (maxConcurrency) (maxPages)")
 		os.Exit(1)
 	}
-	if len(args) > 2 {
+	if len(args) > 4 {
 		fmt.Println("too many arguments provided")
+		fmt.Println("usage: ./crawler <\"URL\"> (maxConcurrency) (maxPages)")
 		os.Exit(1)
 	}
 	rawURL := args[1]
+	maxConcurrency, err := strconv.Atoi(args[2])
+	if err != nil {
+		fmt.Printf("Error - strconv.Atoi: %v\n", err)
+		return
+	}
+	maxPages, err := strconv.Atoi(args[3])
+	if err != nil {
+		fmt.Printf("Error - strconv.Atoi: %v\n", err)
+		return
+	}
 
-	const maxConcurrency = 10
-	cfg, err := configure(rawURL, maxConcurrency)
+	cfg, err := configure(rawURL, maxConcurrency, maxPages)
 	if err != nil {
 		fmt.Printf("Error - configure: %v\n", err)
 		return

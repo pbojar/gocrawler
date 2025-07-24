@@ -11,6 +11,9 @@ func (cfg *config) crawlPage(rawCurrentURL string) {
 		<-cfg.concurrencyControl
 		cfg.wg.Done()
 	}()
+	if cfg.overMax() {
+		return
+	}
 
 	parsedCurr, err := url.Parse(rawCurrentURL)
 	if err != nil {
